@@ -96,4 +96,3 @@ resource "aws_instance" "web" {
 output "ip_publica" {
   value = aws_instance.web.public_ip
 }
-}
