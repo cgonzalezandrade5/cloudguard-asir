@@ -2,16 +2,6 @@ provider "aws" {
   region = var.region
 }
 
-# Busca la imagen de Linux automáticamente
-data "aws_ami" "amazon_linux" {
-  most_recent = true
-  owners      = ["amazon"]
-  filter {
-    name   = "name"
-    values = ["al2023-ami-*-x86_64"]
-  }
-}
-
 # --- RED ---
 resource "aws_vpc" "main_vpc" {
   cidr_block = "10.0.0.0/16"
@@ -66,7 +56,7 @@ resource "aws_security_group" "web_sg" {
 
 # --- INSTANCIA ---
 resource "aws_instance" "web" {
-  ami                    = data.aws_ami.amazon_linux.id
+  ami = "ami-0c02fb55956c7d316"
   instance_type          = var.instance_type
   subnet_id              = aws_subnet.public_subnet.id
   vpc_security_group_ids = [aws_security_group.web_sg.id]
