@@ -2,42 +2,20 @@ provider "aws" {
   region = var.region
 }
 
-# -----------------------
-# SECURITY GROUP
-# -----------------------
-resource "aws_security_group" "web_sg" {
-  name = "sg_${var.name}"
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+# AMI fija (evita problemas de permisos en AWS Academy)
+variable "ami_id" {
+  default = "ami-0c02fb55956c7d316"
 }
 
 # -----------------------
-# EC2 INSTANCE
+# INSTANCIA EC2
 # -----------------------
 resource "aws_instance" "web" {
-  ami           = "ami-0c02fb55956c7d316"
+  ami           = var.ami_id
   instance_type = var.instance_type
 
-  vpc_security_group_ids = [aws_security_group.web_sg.id]
+  # Security Group por defecto del entorno (OBLIGATORIO en AWS Academy)
+  vpc_security_group_ids = [data.aws_security_group.default.id]
 
   associate_public_ip_address = true
 
@@ -88,6 +66,13 @@ resource "aws_instance" "web" {
   tags = {
     Name = var.name
   }
+}
+
+# -----------------------
+# SECURITY GROUP DEFAULT (AWS ACADEMY)
+# -----------------------
+data "aws_security_group" "default" {
+  name = "default"
 }
 
 # -----------------------
