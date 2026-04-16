@@ -2,20 +2,9 @@ provider "aws" {
   region = var.region
 }
 
-# AMI fija (evita problemas de permisos en AWS Academy)
-variable "ami_id" {
-  default = "ami-0c02fb55956c7d316"
-}
-
-# -----------------------
-# INSTANCIA EC2
-# -----------------------
 resource "aws_instance" "web" {
-  ami           = var.ami_id
+  ami           = "ami-0c02fb55956c7d316"
   instance_type = var.instance_type
-
-  # Security Group por defecto del entorno (OBLIGATORIO en AWS Academy)
-  vpc_security_group_ids = [data.aws_security_group.default.id]
 
   associate_public_ip_address = true
 
@@ -68,16 +57,6 @@ resource "aws_instance" "web" {
   }
 }
 
-# -----------------------
-# SECURITY GROUP DEFAULT (AWS ACADEMY)
-# -----------------------
-data "aws_security_group" "default" {
-  name = "default"
-}
-
-# -----------------------
-# OUTPUT
-# -----------------------
 output "ip_publica" {
   value = aws_instance.web.public_ip
 }
