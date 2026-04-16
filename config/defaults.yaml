@@ -1,7 +1,11 @@
 server:
+  name: "CloudGuard-Server" # Nombre del servidor por defecto
   region: us-east-1        # Región por defecto de AWS Academy
   instance_type: t2.micro  # Tipo de instancia por defecto
   cpu: 1                   # Número de núcleos virtuales por defecto
   memory: 1024              # Memoria RAM por defecto
   disk_size: 8            # Tamaño de disco por defecto
   open_ports: [22, 80] # SSH y HTTP para el index.html
+
+
+  

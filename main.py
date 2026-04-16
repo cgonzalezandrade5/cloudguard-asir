@@ -1,6 +1,6 @@
-import yaml
-import json
-import os
+import yaml         # Para leer/escribir archivos YAML
+import json         # Para leer/escribir archivos JSON 
+import os           # Para manejar rutas de archivos y verificar su existencia
 
 # Rutas de archivos (Organizadas por carpetas)
 CONFIG_FILE = "config/config.yaml"

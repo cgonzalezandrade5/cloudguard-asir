@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudGuard - Panel de Control</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background-color: #161b22;
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid #30363d;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            max-width: 500px;
+        }
+        h1 { color: #58a6ff; margin-top: 0; }
+        .status { color: #3fb950; font-weight: bold; }
+        ul { list-style: none; padding: 0; }
+        li { margin: 10px 0; border-bottom: 1px solid #21262d; padding-bottom: 5px; }
+        .check { color: #3fb950; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>🚀 CloudGuard System</h1>
+        <p>Estado del despliegue: <span class="status">ONLINE</span></p>
+        
+        <hr style="border: 0; border-top: 1px solid #30363d;">
+
+        <h3>Información de la Infraestructura</h3>
+        <ul>
+            <li><strong>Servidor:</strong> CloudGuard EC2 Instance</li>
+            <li><strong>Orquestación:</strong> Terraform (IaC)</li>
+            <li><strong>Entorno:</strong> Docker Container (Nginx)</li>
+            <li><strong>Región:</strong> AWS us-east-1</li>
+        </ul>
+
+        <p><span class="check">✔</span> Verificación de conectividad completada con éxito.</p>
+    </div>
+
+</body>
+</html>
