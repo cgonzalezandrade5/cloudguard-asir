@@ -2,39 +2,26 @@ provider "aws" {
   region = var.region
 }
 
-# --- RED ---
-resource "aws_vpc" "main_vpc" {
-  cidr_block = "10.0.0.0/16"
-  tags = { Name = "${var.name}-vpc" }
+# -------------------------
+# VPC por defecto (AWS Academy)
+# -------------------------
+data "aws_vpc" "default" {
+  default = true
 }
 
-resource "aws_subnet" "public_subnet" {
-  vpc_id                  = aws_vpc.main_vpc.id
-  cidr_block              = "10.0.1.0/24"
-  map_public_ip_on_launch = true
-}
-
-resource "aws_internet_gateway" "gw" {
-  vpc_id = aws_vpc.main_vpc.id
-}
-
-resource "aws_route_table" "public_rt" {
-  vpc_id = aws_vpc.main_vpc.id
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.gw.id
+data "aws_subnets" "default" {
+  filter {
+    name   = "default-for-az"
+    values = ["true"]
   }
 }
 
-resource "aws_route_table_association" "rta" {
-  subnet_id      = aws_subnet.public_subnet.id
-  route_table_id = aws_route_table.public_rt.id
-}
-
-# --- SEGURIDAD ---
+# -------------------------
+# SECURITY GROUP
+# -------------------------
 resource "aws_security_group" "web_sg" {
   name   = "sg_${var.name}"
-  vpc_id = aws_vpc.main_vpc.id
+  vpc_id = data.aws_vpc.default.id
 
   dynamic "ingress" {
     for_each = var.open_ports
@@ -54,12 +41,17 @@ resource "aws_security_group" "web_sg" {
   }
 }
 
-# --- INSTANCIA ---
+# -------------------------
+# INSTANCIA EC2
+# -------------------------
 resource "aws_instance" "web" {
-  ami = "ami-0c02fb55956c7d316"
-  instance_type          = var.instance_type
-  subnet_id              = aws_subnet.public_subnet.id
+  ami           = "ami-0c02fb55956c7d316"
+  instance_type = var.instance_type
+
+  subnet_id              = data.aws_subnets.default.ids[0]
   vpc_security_group_ids = [aws_security_group.web_sg.id]
+
+  associate_public_ip_address = true
 
   root_block_device {
     volume_size = var.disk_size
@@ -71,10 +63,9 @@ resource "aws_instance" "web" {
               dnf install -y docker
               systemctl start docker
               systemctl enable docker
-              
+
               mkdir -p /home/ec2-user/html
-              
-              # Aquí he pegado tu HTML directamente
+
               cat <<EOT > /home/ec2-user/html/index.html
               <!DOCTYPE html>
               <html>
@@ -90,12 +81,19 @@ resource "aws_instance" "web" {
               </html>
               EOT
 
-              docker run -d -p 80:80 -v /home/ec2-user/html:/usr/share/nginx/html:ro nginx
+              docker run -d -p 80:80 \
+                -v /home/ec2-user/html:/usr/share/nginx/html:ro \
+                nginx
               EOF
 
-  tags = { Name = var.name }
+  tags = {
+    Name = var.name
+  }
 }
 
+# -------------------------
+# OUTPUT
+# -------------------------
 output "ip_publica" {
   value = aws_instance.web.public_ip
 }
