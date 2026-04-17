@@ -2,7 +2,12 @@ provider "aws" {
   region = var.region
 }
 
+data "aws_vpc" "default" {
+  default = true
+}
+
 resource "aws_default_security_group" "default" {
+  vpc_id = data.aws_vpc.default.id
   dynamic "ingress" {
     for_each = var.open_ports
     content {
