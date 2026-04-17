@@ -100,10 +100,12 @@ def main():
 
     # 5. Generar JSON para Terraform (Para lectura de la máquina)
     # Terraform lee mejor los archivos .json para las variables
+    # Solo exportamos las variables que Terraform declara en variables.tf
+    terraform_keys = ["name", "region", "instance_type", "disk_size", "open_ports"]
+    terraform_vars = {k: v for k, v in final_config["server"].items() if k in terraform_keys}
     os.makedirs("terraform", exist_ok=True)
     with open(TERRAFORM_VARS, "w") as f:
-        # Guardamos solo el contenido de 'server' para que coincida con las variables de TF
-        json.dump(final_config["server"], f, indent=4)
+        json.dump(terraform_vars, f, indent=4)
     print(f"🚀 Archivo de variables generado: {TERRAFORM_VARS}")
 
 if __name__ == "__main__":
