@@ -38,12 +38,15 @@
         
         <hr style="border: 0; border-top: 1px solid #30363d;">
 
-        <h3>Información de la Infraestructura</h3>
+        <h3>Informacion de la Infraestructura</h3>
         <ul>
-            <li><strong>Servidor:</strong> CloudGuard EC2 Instance</li>
-            <li><strong>Orquestación:</strong> Terraform (IaC)</li>
+            <li><strong>Servidor:</strong> ${name}</li>
+            <li><strong>Tipo:</strong> ${instance_type}</li>
+            <li><strong>Region:</strong> ${region}</li>
+            <li><strong>Disco:</strong> ${disk_size} GB</li>
+            <li><strong>Puertos:</strong> ${open_ports}</li>
+            <li><strong>Orquestacion:</strong> Terraform (IaC)</li>
             <li><strong>Entorno:</strong> Docker Container (Nginx)</li>
-            <li><strong>Región:</strong> AWS us-east-1</li>
         </ul>
 
         <p><span class="check">✔</span> Verificación de conectividad completada con éxito.</p>

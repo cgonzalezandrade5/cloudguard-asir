@@ -39,24 +39,15 @@ resource "aws_instance" "web" {
               # Crear carpeta para la web
               mkdir -p /home/ec2-user/html
 
-              # Crear página HTML
-              cat <<EOT > /home/ec2-user/html/index.html
-              <!DOCTYPE html>
-              <html>
-              <head>
-                <title>CloudGuard</title>
-              </head>
-              <body style="font-family: Arial; text-align:center; background:#f4f4f4; padding:50px;">
-                <div style="background:white; padding:30px; border-radius:10px; display:inline-block; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
-                  <h1 style="color:#007bff;">CloudGuard Deployment</h1>
-                  <p>Servidor: <strong>${var.name}</strong></p>
-                  <p>Estado: <span style="color:green;">Activo</span></p>
-                  <hr>
-                  <p>Infraestructura desplegada automaticamente con:</p>
-                  <p>Python + Terraform + Docker</p>
-                </div>
-              </body>
-              </html>
+              # Escribir el HTML generado desde la plantilla
+              cat <<'EOT' > /home/ec2-user/html/index.html
+              ${templatefile("${path.module}/../templates/index.html", {
+                name          = var.name
+                instance_type = var.instance_type
+                region        = var.region
+                disk_size     = var.disk_size
+                open_ports    = join(", ", var.open_ports)
+              })}
               EOT
 
               # Ejecutar Nginx con la web

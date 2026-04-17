@@ -51,6 +51,29 @@ def validate_academy_restrictions(config):
     if config["server"]["instance_type"] != "t2.micro":
         print(f"⚠️  Instancia '{config['server']['instance_type']}' podría tener costes. Ajustando a 't2.micro'.")
         config["server"]["instance_type"] = "t2.micro"
+
+    # 3. Validar puertos (deben ser números entre 1 y 65535)
+    ports = config["server"].get("open_ports", [])
+    if not isinstance(ports, list):
+        print(f"⚠️  open_ports debe ser una lista. Ajustando a [22, 80].")
+        config["server"]["open_ports"] = [22, 80]
+    else:
+        valid_ports = []
+        for port in ports:
+            if isinstance(port, int) and 1 <= port <= 65535:
+                valid_ports.append(port)
+            else:
+                print(f"⚠️  Puerto '{port}' no válido (debe ser entero entre 1 y 65535). Ignorado.")
+        if not valid_ports:
+            print("⚠️  No hay puertos válidos. Ajustando a [22, 80].")
+            valid_ports = [22, 80]
+        config["server"]["open_ports"] = valid_ports
+
+    # 4. Validar tamaño de disco (entre 8 y 30 GB para Academy)
+    disk = config["server"].get("disk_size", 8)
+    if not isinstance(disk, (int, float)) or disk < 8 or disk > 30:
+        print(f"⚠️  Disco '{disk}' GB fuera de rango (8-30). Ajustando a 8 GB.")
+        config["server"]["disk_size"] = 8
         
     return config
 
