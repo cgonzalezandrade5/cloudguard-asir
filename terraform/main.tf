@@ -48,11 +48,11 @@ resource "aws_instance" "web" {
               </head>
               <body style="font-family: Arial; text-align:center; background:#f4f4f4; padding:50px;">
                 <div style="background:white; padding:30px; border-radius:10px; display:inline-block; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
-                  <h1 style="color:#007bff;">🚀 CloudGuard Deployment</h1>
+                  <h1 style="color:#007bff;">CloudGuard Deployment</h1>
                   <p>Servidor: <strong>${var.name}</strong></p>
-                  <p>Estado: <span style="color:green;">✔ Activo</span></p>
+                  <p>Estado: <span style="color:green;">Activo</span></p>
                   <hr>
-                  <p>Infraestructura desplegada automáticamente con:</p>
+                  <p>Infraestructura desplegada automaticamente con:</p>
                   <p>Python + Terraform + Docker</p>
                 </div>
               </body>
