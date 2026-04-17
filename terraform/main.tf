@@ -11,15 +11,6 @@ data "aws_security_group" "default" {
   name   = "default"
 }
 
-resource "aws_vpc_security_group_ingress_rule" "ports" {
-  for_each          = toset([for p in var.open_ports : tostring(p)])
-  security_group_id = data.aws_security_group.default.id
-  from_port         = tonumber(each.value)
-  to_port           = tonumber(each.value)
-  ip_protocol       = "tcp"
-  cidr_ipv4         = "0.0.0.0/0"
-}
-
 resource "aws_instance" "web" {
   ami           = "ami-0c02fb55956c7d316"
   instance_type = var.instance_type
