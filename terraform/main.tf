@@ -6,28 +6,18 @@ data "aws_vpc" "default" {
   default = true
 }
 
-resource "aws_default_security_group" "default" {
+data "aws_security_group" "default" {
   vpc_id = data.aws_vpc.default.id
-  dynamic "ingress" {
-    for_each = var.open_ports
-    content {
-      from_port   = ingress.value
-      to_port     = ingress.value
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-  }
+  name   = "default"
+}
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "${var.name}-default-sg"
-  }
+resource "aws_vpc_security_group_ingress_rule" "ports" {
+  for_each          = toset([for p in var.open_ports : tostring(p)])
+  security_group_id = data.aws_security_group.default.id
+  from_port         = tonumber(each.value)
+  to_port           = tonumber(each.value)
+  ip_protocol       = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
 }
 
 resource "aws_instance" "web" {
@@ -35,7 +25,7 @@ resource "aws_instance" "web" {
   instance_type = var.instance_type
 
   associate_public_ip_address = true
-  vpc_security_group_ids      = [aws_default_security_group.default.id]
+  vpc_security_group_ids      = [data.aws_security_group.default.id]
 
   root_block_device {
     volume_size = var.disk_size
