@@ -2,7 +2,7 @@
 
 **Automatización de infraestructura cloud: Terraform + Python + Docker**
 
-Desplega servidores en AWS de forma automatizada. Valida configuraciones antes de crearlos, sin errores manuales.
+Despliega servidores en AWS de forma automatizada. Valida configuraciones antes de crearlos, sin errores manuales.
 
 ---
 
@@ -83,9 +83,9 @@ config.yaml → Python valida → terraform.tfvars.json → Terraform → AWS
 
 ```yaml
 server:
-  name: "servidor"              # Nombre (personalizable)
-  region: "us-east-1"          # Región (solo esta en Academy)
-  instance_type: "t2.micro"    # Tipo (solo este en Academy)
+  name: "servidor"             # Nombre (personalizable)
+  region: "us-east-1"          # Región (solo ésta en Academy)
+  instance_type: "t2.micro"    # Tipo (gratuito en Academy)
   disk_size: 10                # GB (8-30)
   open_ports: [22, 80]         # Puertos abiertos (SSH y HTTP)
 ```
